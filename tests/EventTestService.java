@@ -23,7 +23,7 @@ public class EventTestService extends Service {
         add(eventHandler);
     }
 
-    @Route(path = "/broadcast", method = Request.Method.GET)
+    @Route(path = "/broadcast", method = Method.GET, require = "message")
     public Response broadcast(Request request){
         eventHandler.broadcast(new Event(UUID.randomUUID().toString()).data(request.GET("message")));
         return Response.simple(Code.Ok, new JSONObject().put("done", true));
@@ -33,7 +33,7 @@ public class EventTestService extends Service {
         eventHandler.broadcast(e);
     }
 
-    @Route(path = "/page", method = Request.Method.GET)
+    @Route(path = "/page", method = Method.GET)
     public Response page(Request request){
         try {
             String page = Files.readString(Path.of("./html/index.html"));

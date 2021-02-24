@@ -31,7 +31,7 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
     private final SyncStore<Event> eventSyncStore = new SyncStore<>();
 
     public EventHandler(String path) {
-        super(new Route(path, Request.Method.UNDEFINED),null);
+        super(new Route(path, Method.UNDEFINED),null);
         super.setContentHandler( request -> {
             try {
                 Connection connection = request.access(CONNECTION);
