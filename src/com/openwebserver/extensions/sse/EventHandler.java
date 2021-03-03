@@ -60,7 +60,6 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
         return enabled;
     }
 
-
     public void broadcast(Event message) {
         eventSyncStore.set(message);
     }
@@ -70,7 +69,7 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
         Request request = (Request) args[0];
         if (authenticationHandler.OnAuthentication(request)) {
             try {
-                connection.writeOpen(Event.Accept());
+                connection.writeOpen(Event.Accept(getHeaders()));
                 Event oldEvent = null;
                 while (enabled && connection.isConnected()) {
                     Event event = eventSyncStore.get();

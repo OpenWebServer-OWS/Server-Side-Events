@@ -1,3 +1,6 @@
+package com.openwebserver.tests;
+
+import ByteReader.ByteReader;
 import com.openwebserver.core.Content.Code;
 import com.openwebserver.core.Content.Content;
 import com.openwebserver.core.Objects.Request;
@@ -9,8 +12,6 @@ import com.openwebserver.services.Objects.Service;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.UUID;
 
 
@@ -23,9 +24,9 @@ public class EventTestService extends Service {
         add(eventHandler);
     }
 
-    @Route(path = "/broadcast", method = Method.GET, require = "message")
+    @Route(path = "/broadcast", method = Method.GET)
     public Response broadcast(Request request){
-        eventHandler.broadcast(new Event(UUID.randomUUID().toString()).data(request.GET("message")));
+        eventHandler.broadcast(new Event(UUID.randomUUID().toString(),request.GET().keySet().toArray(String[]::new)[0]).data(request.GET().values().toArray(String[]::new)[0]));
         return Response.simple(Code.Ok, new JSONObject().put("done", true));
     }
     
@@ -36,10 +37,10 @@ public class EventTestService extends Service {
     @Route(path = "/page", method = Method.GET)
     public Response page(Request request){
         try {
-            String page = Files.readString(Path.of("./html/index.html"));
+            String page = new ByteReader(getClass().getResourceAsStream("/html/index.html")).readAll().toString();
             page = page.replaceAll("\\[PATH]", "\"" + this.getPath() + "\"");
             return Response.simple(Code.Ok, page , Content.Type.Text.edit("html"));
-        } catch (IOException e) {
+        } catch (IOException | ByteReader.ByteReaderException.PrematureStreamException e) {
             return Response.simple(Code.Service_Unavailable, "Can't read resource file");
         }
     }
