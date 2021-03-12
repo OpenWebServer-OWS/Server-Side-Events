@@ -38,6 +38,21 @@ public class Event {
         return data(data, false);
     }
 
+    public Event data(Object data) {
+        if(data.toString().contains("\n")){
+            return data(data.toString(),true);
+        }
+        return data(data.toString(), false);
+    }
+
+    public static Event create(String type){
+        return new Event(UUID.randomUUID().toString(), type);
+    }
+
+    public static Event create(){
+        return new Event(UUID.randomUUID().toString());
+    }
+
     public Event data(String data, boolean encode) {
         if(encode){
             data = data.replaceAll("\n", "%0A");
