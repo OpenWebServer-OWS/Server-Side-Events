@@ -1,5 +1,6 @@
-
-*.xml
-*.class
+/out
+/test
+/.idea
+/public
 *.iml
-out/
+*.xml
