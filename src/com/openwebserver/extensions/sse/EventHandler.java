@@ -1,6 +1,5 @@
 package com.openwebserver.extensions.sse;
 
-
 import com.openwebserver.core.Connection.Connection;
 import com.openwebserver.core.Connection.ConnectionManager;
 import com.openwebserver.core.Content.Code;
@@ -56,7 +55,7 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
         this.enabled = false;
     }
 
-    private boolean isEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

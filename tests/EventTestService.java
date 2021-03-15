@@ -1,5 +1,3 @@
-package com.openwebserver.tests;
-
 import ByteReader.ByteReader;
 import com.openwebserver.core.Content.Code;
 import com.openwebserver.core.Content.Content;

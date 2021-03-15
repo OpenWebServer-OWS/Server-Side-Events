@@ -10,8 +10,6 @@ import com.openwebserver.core.Objects.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 public class Event {
