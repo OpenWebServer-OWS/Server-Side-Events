@@ -87,7 +87,7 @@ public class Event {
         Headers headers1 = new Headers();
         headers1.add(Header.raw("HTTP/" + Response.version + " " + Code.Ok.getCode()));
         headers1.add(new Header("Cache-Control", "no-cache,public"));
-        headers1.add( new Header("Content-Type", "text/event-stream"));
+        headers1.add(new Header("Content-Type", "text/event-stream"));
         headers1.addAll(headers);
         return headers1;
     }
