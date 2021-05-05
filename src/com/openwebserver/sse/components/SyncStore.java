@@ -1,4 +1,4 @@
-package com.openwebserver.extensions.sse.Objects;
+package com.openwebserver.sse.components;
 
 public class SyncStore<T> {
 

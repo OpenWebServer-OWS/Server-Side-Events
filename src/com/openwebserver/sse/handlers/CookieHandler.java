@@ -1,4 +1,4 @@
-package com.openwebserver.extensions.sse.Handlers;
+package com.openwebserver.sse.handlers;
 
 
 import com.openwebserver.core.Objects.Cookie;

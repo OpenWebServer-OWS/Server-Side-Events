@@ -1,4 +1,4 @@
-package com.openwebserver.extensions.sse;
+package com.openwebserver.sse;
 
 import com.openwebserver.core.Connection.Connection;
 import com.openwebserver.core.Connection.ConnectionManager;
@@ -8,10 +8,10 @@ import com.openwebserver.core.Objects.Request;
 import com.openwebserver.core.Objects.Response;
 import com.openwebserver.core.Routing.Route;
 import com.openwebserver.core.WebException;
-import com.openwebserver.extensions.sse.Handlers.AuthenticationHandler;
-import com.openwebserver.extensions.sse.Handlers.CookieHandler;
-import com.openwebserver.extensions.sse.Objects.Event;
-import com.openwebserver.extensions.sse.Objects.SyncStore;
+import com.openwebserver.sse.handlers.AuthenticationHandler;
+import com.openwebserver.sse.handlers.CookieHandler;
+import com.openwebserver.sse.components.Event;
+import com.openwebserver.sse.components.SyncStore;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
@@ -19,7 +19,7 @@ import java.util.function.BiConsumer;
 import static com.openwebserver.core.Connection.ConnectionManager.Access.CONNECTION;
 
 
-public class EventHandler extends RequestHandler implements BiConsumer<Connection, Object[]> {
+public class EventStream extends RequestHandler implements BiConsumer<Connection, Object[]> {
 
 
     private CookieHandler cookieHandler = request -> null;
@@ -29,24 +29,24 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
 
     private final SyncStore<Event> eventSyncStore = new SyncStore<>();
 
-    public EventHandler(String path) {
+    public EventStream(String path) {
         super(new Route(path, Method.UNDEFINED),null);
         super.setContentHandler( request -> {
             try {
                 Connection connection = request.access(CONNECTION);
-                return connection.HandOff(EventHandler.this,request);
+                return connection.HandOff(EventStream.this,request);
             } catch (IOException | ConnectionManager.ConnectionManagerException ioException) {
                 return new WebException(ioException).respond();
             }
         });
     }
 
-    public EventHandler setCookieHandler(CookieHandler handler){
+    public EventStream setCookieHandler(CookieHandler handler){
         this.cookieHandler = handler;
         return this;
     }
 
-    public EventHandler setAuthenticationHandler(AuthenticationHandler handler){
+    public EventStream setAuthenticationHandler(AuthenticationHandler handler){
         this.authenticationHandler = handler;
         return this;
     }
@@ -67,7 +67,7 @@ public class EventHandler extends RequestHandler implements BiConsumer<Connectio
     public void accept(Connection connection, Object[] args) {
         Request request = (Request) args[0];
         if (authenticationHandler.OnAuthentication(request)) {
-            try {
+                try {
                 connection.writeOpen(Event.Accept(getHeaders()));
                 Event oldEvent = null;
                 while (enabled && connection.isConnected()) {

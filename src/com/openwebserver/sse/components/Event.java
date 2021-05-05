@@ -1,4 +1,4 @@
-package com.openwebserver.extensions.sse.Objects;
+package com.openwebserver.sse.components;
 
 
 import com.openwebserver.core.Connection.ConnectionWriter;
