@@ -1,8 +1,8 @@
 package com.openwebserver.sse.handlers;
 
 
-import com.openwebserver.core.Objects.Cookie;
-import com.openwebserver.core.Objects.Request;
+import com.openwebserver.core.http.Cookie;
+import com.openwebserver.core.objects.Request;
 
 public interface CookieHandler {
 

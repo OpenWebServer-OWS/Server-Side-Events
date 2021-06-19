@@ -1,22 +1,22 @@
 package com.openwebserver.sse;
 
-import com.openwebserver.core.Connection.Connection;
-import com.openwebserver.core.Connection.ConnectionManager;
-import com.openwebserver.core.Content.Code;
-import com.openwebserver.core.Handlers.RequestHandler;
-import com.openwebserver.core.Objects.Request;
-import com.openwebserver.core.Objects.Response;
-import com.openwebserver.core.Routing.Route;
+
 import com.openwebserver.core.WebException;
-import com.openwebserver.sse.handlers.AuthenticationHandler;
-import com.openwebserver.sse.handlers.CookieHandler;
+import com.openwebserver.core.connection.ConnectionManager;
+import com.openwebserver.core.connection.client.Connection;
+import com.openwebserver.core.handlers.RequestHandler;
+import com.openwebserver.core.http.content.Code;
+import com.openwebserver.core.objects.Request;
+import com.openwebserver.core.objects.Response;
+import com.openwebserver.core.routing.Route;
 import com.openwebserver.sse.components.Event;
 import com.openwebserver.sse.components.SyncStore;
+import com.openwebserver.sse.handlers.AuthenticationHandler;
+import com.openwebserver.sse.handlers.CookieHandler;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-import static com.openwebserver.core.Connection.ConnectionManager.Access.CONNECTION;
 
 
 public class EventStream extends RequestHandler implements BiConsumer<Connection, Object[]> {
@@ -31,9 +31,9 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
 
     public EventStream(String path) {
         super(new Route(path, Method.UNDEFINED),null);
-        super.setContentHandler( request -> {
+        super.setContentHandler(request -> {
             try {
-                Connection connection = request.access(CONNECTION);
+                Connection connection = request.access(ConnectionManager.Access.CONNECTION);
                 return connection.HandOff(EventStream.this,request);
             } catch (IOException | ConnectionManager.ConnectionManagerException ioException) {
                 return new WebException(ioException).respond();
@@ -82,12 +82,16 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
                         connection.write(Response.simple(Code.Internal_Server_Error, e.getMessage()));
                     }
                 }
-                System.err.println("Client disconnected " + connection.getConnectionString());
+                System.err.println("Client disconnected " + connection.toString());
             } catch (IOException e) {
                 connection.close();
             }
         } else {
-            connection.write(Response.simple(Code.Unauthorized));
+            try {
+                connection.write(Response.simple(Code.Unauthorized));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     //endregion

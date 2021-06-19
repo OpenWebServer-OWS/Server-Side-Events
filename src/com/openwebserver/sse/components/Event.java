@@ -1,12 +1,13 @@
 package com.openwebserver.sse.components;
 
 
-import com.openwebserver.core.Connection.ConnectionWriter;
-import com.openwebserver.core.Content.Code;
-import com.openwebserver.core.Objects.Cookie;
-import com.openwebserver.core.Objects.Headers.Header;
-import com.openwebserver.core.Objects.Headers.Headers;
-import com.openwebserver.core.Objects.Response;
+import com.openwebserver.core.connection.client.Connection;
+import com.openwebserver.core.http.Cookie;
+import com.openwebserver.core.http.Header;
+import com.openwebserver.core.http.Headers;
+import com.openwebserver.core.http.content.Code;
+import com.openwebserver.core.objects.Response;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Event {
         return this;
     }
 
-    public Event send(ConnectionWriter out) throws IOException {
+    public Event send(Connection out) throws IOException {
         out.write(("event: " + event + "\n").getBytes());
         out.write(("id: " + id + "\n").getBytes());
         out.write(("data: " + data + "\n\n").getBytes());
