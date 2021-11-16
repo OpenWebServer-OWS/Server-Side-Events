@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 
 
-
 public class EventStream extends RequestHandler implements BiConsumer<Connection, Object[]> {
 
 
@@ -30,28 +29,28 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
     private final SyncStore<Event> eventSyncStore = new SyncStore<>();
 
     public EventStream(String path) {
-        super(new Route(path, Method.UNDEFINED),null);
+        super(new Route(path, Method.UNDEFINED));
         super.setContentHandler(request -> {
             try {
                 Connection connection = request.access(ConnectionManager.Access.CONNECTION);
-                return connection.HandOff(EventStream.this,request);
+                return connection.HandOff(EventStream.this, request);
             } catch (IOException | ConnectionManager.ConnectionManagerException ioException) {
                 return new WebException(ioException).respond();
             }
         });
     }
 
-    public EventStream setCookieHandler(CookieHandler handler){
+    public EventStream setCookieHandler(CookieHandler handler) {
         this.cookieHandler = handler;
         return this;
     }
 
-    public EventStream setAuthenticationHandler(AuthenticationHandler handler){
+    public EventStream setAuthenticationHandler(AuthenticationHandler handler) {
         this.authenticationHandler = handler;
         return this;
     }
 
-    public void disable(){
+    public void disable() {
         this.enabled = false;
     }
 
@@ -67,7 +66,7 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
     public void accept(Connection connection, Object[] args) {
         Request request = (Request) args[0];
         if (authenticationHandler.OnAuthentication(request)) {
-                try {
+            try {
                 connection.writeOpen(Event.Accept(getHeaders()));
                 Event oldEvent = null;
                 while (enabled && connection.isConnected()) {
