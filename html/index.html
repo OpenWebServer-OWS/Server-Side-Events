@@ -2,6 +2,9 @@
 <html lang="en">
 <body>
 <h1>Getting server updates</h1>
+<label for="broadcast-input">Input</label><input type="text" id="broadcast-input"/>
+<button id="broadcast-btn" onclick="broadcast()">BroadCast</button>
+<span id="broadcast-notice" style="display: none; color: green">Message broadcast</span>
 <div id="result"></div>
 
 <script>
@@ -10,12 +13,27 @@ if(typeof(EventSource) !== undefined) {
     source.onmessage = (event) => {
         document.getElementById("result").innerHTML += event.data + "<br>";
     }
-    source.onopen = (ev => {
+    source.onopen = () => {
         alert("Connected");
-    });
+    };
     source.onerror = (ev => {
         alert(ev);
     });
+
+    function broadcast(){
+        let noticeElement = document.getElementById("broadcast-notice");
+        fetch(`http://localhost/broadcast?message=${document.getElementById("broadcast-input").value}`,{method: "GET"}).then((resp) =>{
+            if(resp.ok){
+                noticeElement.style.display = "initial"
+                setTimeout(() =>{
+                    noticeElement.style.display = "none";
+                }, 1000);
+            }else{
+                console.error(resp);
+            }
+        });
+    }
+
 } else {
   document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
 }

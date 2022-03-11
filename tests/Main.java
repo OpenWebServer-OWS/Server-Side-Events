@@ -7,8 +7,8 @@ import com.openwebserver.core.routing.Router;
 
 public class Main {
 
-    public static void main(String[] args) {
-//        Router.VERBOSE = true;
+    public static void main(String[] args) throws Domain.DomainException {
+        Router.VERBOSE = true;
         new WebServer().addDomain(
                 new Domain()
                         .addHandler(

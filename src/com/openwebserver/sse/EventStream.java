@@ -22,14 +22,13 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
 
 
     private CookieHandler cookieHandler = request -> null;
-
     private AuthenticationHandler authenticationHandler = request -> true;
     private boolean enabled = true;
 
     private final SyncStore<Event> eventSyncStore = new SyncStore<>();
 
     public EventStream(String path) {
-        super(new Route(path, Method.UNDEFINED));
+        super(new Route(path, Method.UNDEFINED), null);
         super.setContentHandler(request -> {
             try {
                 Connection connection = request.access(ConnectionManager.Access.CONNECTION);
@@ -81,7 +80,7 @@ public class EventStream extends RequestHandler implements BiConsumer<Connection
                         connection.write(Response.simple(Code.Internal_Server_Error, e.getMessage()));
                     }
                 }
-                System.err.println("Client disconnected " + connection.toString());
+                System.err.println("Client disconnected " + connection);
             } catch (IOException e) {
                 connection.close();
             }

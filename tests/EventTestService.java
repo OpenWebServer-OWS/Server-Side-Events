@@ -29,7 +29,7 @@ public class EventTestService extends Service {
     @Route(path = "/broadcast", method = Method.GET)
     public Response broadcast(Request request){
         stream.broadcast(new Event(UUID.randomUUID().toString(),request.GET.keySet().toArray(String[]::new)[0]).data(request.GET.values().toArray(String[]::new)[0]));
-        return Response.simple(com.openwebserver.core.http.content.Code.Ok, new JSONObject().put("done", true));
+        return Response.simple(com.openwebserver.core.http.content.Code.Ok, new JSONObject().put("done", true).put("info", "Only message=<VALUE> will be displayed on test page add for each url arg a event listener on the eventsource"));
     }
     
     public void broadcast(Event e){
